@@ -51,12 +51,12 @@ export async function POST(req: Request) {
   // For this guide, you simply log the payload to the console
   const { id } = evt.data
   const eventType = evt.type
+
   if(eventType === "user.created") {
     try {
       await prisma.user.create({
         data: {
           id: evt.data.id,
-          email: JSON.parse(body).data.email_address,
           name: JSON.parse(body).data.username,
           image: JSON.parse(body).data.image_url,
         },
@@ -68,5 +68,23 @@ export async function POST(req: Request) {
     }
   }
 
-  return new Response('', { status: 200 })
+  if(eventType === "user.updated") {
+    try {
+      await prisma.user.update({
+        where :{
+          id: evt.data.id,
+        },
+        data: {
+          name: JSON.parse(body).data.username,
+          image: JSON.parse(body).data.image_url,
+        },
+      });
+      return new Response("ユーザの更新に成功しました。", {status: 201})
+    } catch (err) {
+      console.log(err)
+      return new Response("ユーザの更新に失敗しました。", {status: 500})
+    }
+  }
+
+  return new Response('webhooks received', { status: 200 });
 }

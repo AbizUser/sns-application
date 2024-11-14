@@ -2,28 +2,65 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { HeartIcon, MessageCircleIcon, Share2Icon, ClockIcon } from "./Icons";
+import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
 
-export default function PostList() {
-  const posts = [
-    {
-      id: 1,
-      author: { name: "Jane Doe", username: "@janedoe" },
-      content:
-        "Excited to share my latest project with you all! Check it out and let me know what you think.",
-      timestamp: "2h",
-      comments: [
-        { author: "John Doe", content: "Great work!" },
-        { author: "Jane Doe", content: "Looks amazing!" },
-      ],
+export default async function PostList() {
+  // const posts = [
+  //   {
+  //     id: 1,
+  //     author: { name: "Jane Doe", username: "@janedoe" },
+  //     content:
+  //       "Excited to share my latest project with you all! Check it out and let me know what you think.",
+  //     timestamp: "2h",
+  //     comments: [
+  //       { author: "John Doe", content: "Great work!" },
+  //       { author: "Jane Doe", content: "Looks amazing!" },
+  //     ],
+  //   },
+  //   {
+  //     id: 2,
+  //     author: { name: "John Smith", username: "@johnsmith" },
+  //     content:
+  //       "Enjoying the beautiful weather today! Whos up for a hike later?",
+  //     timestamp: "1h",
+  //   },
+  // ];
+
+  let posts = [];
+  const { userId } = auth();
+
+  if ( !userId ) {
+    return;
+  }
+
+  //SSG
+  // fetch("api", {force-cache})
+
+  //SSR
+  posts = await prisma.post.findMany({
+    where: {
+      authorId: {
+        in: [userId],
+      },
     },
-    {
-      id: 2,
-      author: { name: "John Smith", username: "@johnsmith" },
-      content:
-        "Enjoying the beautiful weather today! Whos up for a hike later?",
-      timestamp: "1h",
+    include: {
+      author: true,
+      likes: {
+        select: {
+          userId: true,
+        },
+      },
+      _count: {
+        select: {
+          replies: true,
+        }
+      }
     },
-  ];
+    orderBy: {
+      createdAt: "desc",
+    }
+  });
 
   return (
     <div className="space-y-4">
@@ -39,7 +76,7 @@ export default function PostList() {
             </Avatar>
             <div>
               <h3 className="text-lg font-bold">{post.author.name}</h3>
-              <p className="text-muted-foreground">{post.author.username}</p>
+              <p className="text-muted-foreground">{post.author.name}</p>
             </div>
           </div>
           <div className="space-y-2">
@@ -59,7 +96,7 @@ export default function PostList() {
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <ClockIcon className="h-5 w-5" />
-              <span>{post.timestamp}</span>
+              <span>{post.createdAt.toLocaleString()}</span>
             </div>
           </div>
           {post.comments && (
