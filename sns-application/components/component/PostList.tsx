@@ -3,7 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { HeartIcon, MessageCircleIcon, Share2Icon, ClockIcon } from "./Icons";
 import { auth } from "@clerk/nextjs/server";
-import prisma from "@/lib/prisma";
+import { fetchPosts } from "@/lib/postDataFetcher";
 
 export default async function PostList() {
   // const posts = [
@@ -27,40 +27,14 @@ export default async function PostList() {
   //   },
   // ];
 
-  let posts = [];
+  // let posts = [];
   const { userId } = auth();
 
   if ( !userId ) {
     return;
   }
 
-  //SSG
-  // fetch("api", {force-cache})
-
-  //SSR
-  posts = await prisma.post.findMany({
-    where: {
-      authorId: {
-        in: [userId],
-      },
-    },
-    include: {
-      author: true,
-      likes: {
-        select: {
-          userId: true,
-        },
-      },
-      _count: {
-        select: {
-          replies: true,
-        }
-      }
-    },
-    orderBy: {
-      createdAt: "desc",
-    }
-  });
+  const posts = await fetchPosts(userId);
 
   return (
     <div className="space-y-4">
