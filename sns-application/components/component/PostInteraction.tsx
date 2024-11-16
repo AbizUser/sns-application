@@ -48,7 +48,7 @@ const PostInteraction = ({
     // e.preventDefault();
     try {
       addOptimisticLike();
-      // await likeAction(postId);
+      await likeAction(postId);
       // setLikeState((prev) => ({
       //   likeCount: prev.isLiked ? prev.likeCount - 1 : prev.likeCount + 1,
       //   isLiked: !prev.isLiked,
@@ -67,10 +67,16 @@ const PostInteraction = ({
       <form action={handleLikeSubmit}>
       {/* <form onSubmit={handleLikeSubmit}> */}
         <Button variant="ghost" size="icon">
-          <HeartIcon className="h-5 w-5 text-muted-foreground" />
+          <HeartIcon 
+            className={`h-5 w-5 ${
+            optimistimisticLike.isLiked
+              ? "text-destructive" 
+              : "text-muted-foreground"
+            }`}
+          />
         </Button>
       </form>
-      <span className='ml-1 '>{optimistimisticLike.likeCount}</span>
+      <span className={`-ml-1 ${optimistimisticLike.isLiked ? "text-destructive" : ""}`}>{optimistimisticLike.likeCount}</span>
       {/* <span className='ml-1 '>{likeState.likeCount}</span> */}
         <Button variant="ghost" size="icon">
           <MessageCircleIcon className="h-5 w-5 text-muted-foreground" />
