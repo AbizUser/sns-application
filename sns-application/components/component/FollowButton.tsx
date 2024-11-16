@@ -2,11 +2,10 @@ import React from 'react'
 import { Button } from '../ui/button'
 import { followAction } from '@/lib/actions';
 
-
 interface FollowButtonProps {
   isCurrentUser: boolean;
   isFollowing: boolean;
-  userId: string
+  userId: string;
 }
 
 const FollowButton = ({isCurrentUser, isFollowing, userId}: FollowButtonProps) => {
@@ -15,11 +14,13 @@ const FollowButton = ({isCurrentUser, isFollowing, userId}: FollowButtonProps) =
     if (isCurrentUser) {
       return "プロフィール編集";
     }
+
     if (isFollowing) {
       return "フォロー中";
     }
+
     return "フォローする"
-  }
+  };
 
   const getButtonVariant = () => {
     if (isCurrentUser) {
@@ -31,7 +32,7 @@ const FollowButton = ({isCurrentUser, isFollowing, userId}: FollowButtonProps) =
     }
 
     return "default";
-  }
+  };
 
   return (
     // サーバーのactionでデータを受け取る場合にはbind関数を取得する必要がある。
@@ -40,7 +41,7 @@ const FollowButton = ({isCurrentUser, isFollowing, userId}: FollowButtonProps) =
         {getButtonContent()}
       </Button>
     </form>
-  )
-}
+  );
+};
 
 export default FollowButton

@@ -102,8 +102,7 @@ export const likeAction = async (postId: string) => {
   }
 }
 
-
-export const followAction = async (userId) => {
+export const followAction = async (userId: string) => {
   const { userId: currentUserId } = auth();
 
   if(!currentUserId) {
@@ -112,33 +111,33 @@ export const followAction = async (userId) => {
 
   try {
     //unfollow
-    const existingFollow = await prisma.like.follow.findFirst({
+    const existingFollow = await prisma.follow.findFirst({
       where: {
         followerId: currentUserId,
         followingId: userId,
-      }
+      },
     });
-
     if (existingFollow) {
       await prisma.follow.delete({
         where: {
           followerId_followingId:{
             followerId: currentUserId,
-            followingId: userId
+            followingId: userId,
           }
         },
       });
 
     } else {
+      //follow
       await prisma.follow.create({
         data: {
           followerId: currentUserId,
           followingId: userId,
-        }
-      })
+        },
+      });
     }
     revalidatePath(`profile/${userId}`);
   } catch (err) {
     console.log(err)
   }
-}
+};

@@ -13,8 +13,8 @@ export default async function ProfilePage({params
 
   const username = params.username;
 
-
   const {userId: currentUserId} = auth();
+
   if(!currentUserId) {
     notFound();
   }
@@ -46,7 +46,8 @@ export default async function ProfilePage({params
 
   const isCurrentUser = currentUserId === user.id;
   const isFollowing = user.following.length > 0;
-
+  console.log(`user.following`+user.following)
+  console.log(`user.following.length`+user.following.length)
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
@@ -100,7 +101,8 @@ export default async function ProfilePage({params
               <FollowButton
                 isCurrentUser={isCurrentUser}
                 userId={user.id}
-                isFollowing={isFollowing}/>
+                isFollowing={isFollowing}
+              />
               <div>
                 <h3 className="text-lg font-bold">Suggested</h3>
                 <div className="mt-4 space-y-4">
