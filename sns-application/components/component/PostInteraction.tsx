@@ -35,7 +35,6 @@ const PostInteraction = ({
   const initialState = {
     likeCount: initialLikes.length,
     isLiked: userId ? initialLikes.includes(userId): false,
-  
   }
 
   const [optimistimisticLike, addOptimisticLike] = useOptimistic<LikeState, void>(initialState, (currentState) => ({
