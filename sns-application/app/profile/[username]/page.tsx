@@ -99,6 +99,7 @@ export default async function ProfilePage({params
             <div className="sticky top-14 self-start space-y-6">
               <FollowButton
                 isCurrentUser={isCurrentUser}
+                userId={user.id}
                 isFollowing={isFollowing}/>
               <div>
                 <h3 className="text-lg font-bold">Suggested</h3>
