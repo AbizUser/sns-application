@@ -15,7 +15,7 @@ export default async function PostList({ username }: { username: string }) {
 
   return (
     <div className="space-y-4">
-      {posts.length ?
+      {posts ?
       posts.map((post) => (<Post key={post.id} post={post}/>)
       ) : ( 
         <div>ポストが見つかりません。</div>
