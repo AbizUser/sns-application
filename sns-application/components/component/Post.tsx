@@ -2,6 +2,7 @@ import React from 'react'
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ClockIcon } from "./Icons";
 import PostInteraction from './PostInteraction';
+import Link from 'next/link';
 
 const Post = ({ post }: any) => {
 
@@ -11,10 +12,12 @@ const Post = ({ post }: any) => {
     className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4"
   >
     <div className="flex items-center gap-4 mb-4">
+      <Link href={`/profile/${post.author.name}`}>
       <Avatar className="w-10 h-10">
         <AvatarImage src={post.author.image} />
         <AvatarFallback>AC</AvatarFallback>
       </Avatar>
+      </Link>
       <div>
         <h3 className="text-lg font-bold">{post.author.name}</h3>
         <p className="text-muted-foreground">{post.author.name}</p>
