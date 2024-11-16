@@ -4,7 +4,7 @@ import { SendIcon } from './Icons'
 import { useFormStatus } from 'react-dom'
 
 const SubmitButton = () => {
-  const { pending　} = useFormStatus();
+  const { pending } = useFormStatus();
 
   return (
     <Button variant="ghost" size="icon" disabled={pending}>

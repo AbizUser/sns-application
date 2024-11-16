@@ -64,3 +64,40 @@ export async function addPostAction(prevState: State, formData: FormData): Promi
     }
   }
 }
+
+export const likeAction = async (postId: string) => {
+  const { userId } = auth();
+
+  if(!userId) {
+    throw new Error("User is not authenticated");
+  }
+
+  try {
+    const existingLike = await prisma.like.findFirst({
+      where: {
+        postId,
+        userId,
+      }
+    });
+
+    if (existingLike) {
+      await prisma.like.delete({
+        where: {
+          id: existingLike.id,
+        },
+      });
+
+      revalidatePath("/");
+    } else {
+      await prisma.like.create({
+        data: {
+          postId,
+          userId,
+        }
+      })
+      revalidatePath("/");
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
